@@ -1,0 +1,52 @@
+- name: ASM deploy playbook
+  hosts: bigips
+  gather_facts: False
+  connection: local
+
+  vars:
+    state: "present"
+    policy_name1: asm-l7-policy
+    asm_policy_template: "/var/tmp/ansible/templates/asm-template-1.xml"
+    asm_policy_name: new_asm_policy
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Create ASM policy
+      bigip_asm_policy:
+        name: "{{ asm_policy_name }}"
+        file: "{{ asm_policy_template }}"
+        active: yes
+        state: "{{ state }}"
+
+    - name: Create published L7 policy with one stub rule
+      bigip_policy:
+        name: "{{ policy_name1 }}"
+        rules:
+          - rule1
+        state: "{{ state }}"
+
+    - name: Attach ASM policy to LTM policy rule
+      bigip_policy_rule:
+        policy: "{{ policy_name1 }}"
+        name: rule1
+        actions:
+          - type: enable
+            asm_policy: "{{ asm_policy_name }}"
+
+    - name: Add virtual server
+      bigip_virtual_server:
+        partition: Common
+        name: my-virtual-server
+        destination: 10.10.10.10
+        port: 4433
+        snat: Automap
+        description: Test Virtual Server
+        profiles:
+          - http
+          - websecurity
+          - name: clientssl
+            context: server-side
+        policies:
+          - "{{ policy_name1 }}"
+        state: "{{ state }}"
