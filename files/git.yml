@@ -1,48 +1,53 @@
 - name: Get File
   uri:
-    url: "https://api.github.com/repos/migara/ASM-ansible-playbooks/contents/{{ file_name }}"
+    url: "https://api.github.com/repos/{{ git_owner }}/{{ git_repo }}/contents/{{ export_policy }}.xml?ref={{ git_branch }}"
     method: GET
-    user: "{{ username }}"
-    password: "{{ password }}"
+    user: "{{ git_username }}"
+    password: "{{ git_password }}"
     force_basic_auth: yes
     body_format: json
     status_code: 200, 404
   register: result
+  delegate_to: localhost
 
-- debug:
-    msg: "{{ result }}"
+# - debug:
+#     msg: "{{ result }}"
 
 - name: Create File 
   uri:
-    url: "https://api.github.com/repos/migara/ASM-ansible-playbooks/contents/{{ file_name }}"
+    url: "https://api.github.com/repos/{{ git_owner }}/{{ git_repo }}/contents/{{ export_policy }}.xml"
     method: PUT
-    user: "{{ username }}"
-    password: "{{ password }}"
+    user: "{{ git_username }}"
+    password: "{{ git_password }}"
     body: 
-      message: "Upload ASM policy"
+      message: "{{ commit_msg }}"
+      branch: "{{ git_branch }}"
       committer:
-        name: "{{ username }}"
-        email: "test@migara.com"
-      content: "{{ lookup('file', '../templates/new_asm_policy.xml') | b64encode }}"
+        name: "{{ git_username }}"
+        email: "{{ git_username }}@local"
+      content: "{{ lookup('file', '../{{ parent_folder }}/{{ export_policy }}.xml') | b64encode }}"
     force_basic_auth: yes
     body_format: json
     status_code: 201
   when: result.status == 404
+  delegate_to: localhost
 
 - name: Update File 
   uri:
-    url: "https://api.github.com/repos/migara/ASM-ansible-playbooks/contents/{{ file_name }}"
+    url: "https://api.github.com/repos/{{ git_owner }}/{{ git_repo }}/contents/{{ export_policy }}.xml"
     method: PUT
-    user: "{{ username }}"
-    password: "{{ password }}"
+    user: "{{ git_username }}"
+    password: "{{ git_password }}"
     body: 
       sha: "{{ result.json.sha }}"
-      message: "Update ASM policy"
+      message: "{{ commit_msg }}"
+      branch: "{{ git_branch }}"
       committer:
-        name: "{{ username }}"
-        email: "test@migara.com"
-      content: "{{ lookup('file', '../templates/new_asm_policy.xml') | b64encode }}"
+        name: "{{ git_username }}"
+        email: "{{ git_username }}@local"
+      content: "{{ lookup('file', '../{{ parent_folder }}/{{ export_policy }}.xml') | b64encode }}"
     force_basic_auth: yes
     body_format: json
     status_code: 200
   when: result.status == 200
+  delegate_to: localhost

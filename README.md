@@ -11,8 +11,8 @@ Pre-req: LTM app definition exist on git (LTM repo). To be used on step 5.1
 
 2. SecOps log in to the pre-prod BIG-IP and fine tune the policy  
 
-3. SecOps run playbooks/export_policy.yml  
-    3.1 Prompted for git username and password  
+3. SecOps run [playbooks/export_policy.yml](playbooks/export_policy.yml)    
+    3.1 Prompted for git username, password, git_branch and commit_message  
     3.2 Exported policy stored in Git (dev branch) - ASM Repo  
     3.3 Create a merge request to master branch from the GitHub Web GUI - ASM Repo  
 
@@ -55,8 +55,27 @@ Pre-req: LTM app definition exist on git (IaC). To be used on step 3.3
   5.1 Update the ASM policy on prod BIG-IP
 -->
 
-## How to play
+### How to play
 
 ```
 ansible-playbook playbooks/playbook_name.yml -l bigips -e @creds.yml --vault-password-file .password -vvv
 ```
+
+### Credentials
+The encrypted [vault](https://docs.ansible.com/ansible/latest/vault.html) file ([creds.yml](creds.yml)) contains the BIG-IP credentials and the Slack [incoming webhook](https://my.slack.com/services/new/incoming-webhook/) token (used for notifications).
+
+The vault password is: **_password_**
+
+View:
+```shell
+ansible-vault view creds.yml
+Vault password: password
+bigip_user: "admin"
+bigip_pass: "admin"
+slack_token: "thetoken/generatedby/slack"
+```
+
+Modify:
+```shell
+ansible-vault edit creds.yml
+Vault password: password

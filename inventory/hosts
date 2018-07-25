@@ -3,6 +3,12 @@ client ansible_host=172.17.0.2
 [bigips]
 asm13.local
 
+[f5_prod]
+asm13.local
+
+[f5_preprod]
+asm13.local
+
 [webservers]
 10.100.112.1
 10.100.112.2

@@ -15,3 +15,5 @@ Dockerfile
 encode
 LICENSE
 runsible.py
+tmp/*
+!tmp/.gitkeep 

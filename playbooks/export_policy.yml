@@ -1,23 +1,51 @@
 - name: ASM export playbook
-  hosts: bigips
+  hosts: f5_preprod
   gather_facts: False
 
+  vars_prompt:
+    - name: export_policy
+      prompt: "Name of the policy to be exported from pre-prod"
+      private: no
+    - name: git_username
+      prompt: "Username"
+      default: "migara"
+      private: no
+    - name: git_password
+      prompt: "Password"
+      default: "{{ git_token }}"  
+      private: yes
+    - name: git_owner
+      prompt: "Git Owner"
+      default: "migara"
+      private: no
+    - name: git_repo
+      prompt: "Repo Name"
+      default: "ASM"  
+      private: no
+    - name: git_branch
+      prompt: "Git Branch"
+      default: "dev"
+      private: no
+    - name: commit_msg
+      prompt: "Commit message"
+      default: "commit"
+      private: no
+
   vars:
-    state: "present"
-    policy_name1: asm-l7-policy
-    asm_policy_template: "/var/tmp/ansible/templates/asm-template-1.xml"
-    asm_policy_name: new_asm_policy
+    parent_folder: "tmp"
 
   environment: "{{ bigip_env }}"
 
   tasks:
     - name: Export ASM policy
       bigip_command:
-        commands: "save asm policy {{ asm_policy_name }} xml-file /var/tmp/export-{{ asm_policy_name }}.xml"
+        commands: "save asm policy {{ export_policy }} xml-file {{ export_policy }}.xml"
       delegate_to: localhost
 
     - name: Fetch ASM policy
       fetch:
-        src: /var/tmp/{{ asm_policy_name }}.xml
-        dest: ../templates/
+        src: "/var/tmp/{{ export_policy }}.xml"
+        dest: "../{{ parent_folder }}/"
         flat: yes
+
+    - import_tasks: ../files/git.yml

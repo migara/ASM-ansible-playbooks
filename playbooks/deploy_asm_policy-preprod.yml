@@ -1,11 +1,11 @@
 - name: ASM deploy playbook
-  hosts: bigips
+  hosts: preprod
   gather_facts: False
   connection: local
 
   vars_prompt:
-    - name: app_name
-      prompt: "App Name"
+    - name: asm_policy_name
+      prompt: "ASM policy name"
       private: no
     - name: template_name
       prompt: "WAF Template Name"
@@ -21,7 +21,7 @@
   tasks:
     - name: Create ASM policy
       bigip_asm_policy:
-        name: "{{ app_name }}"
+        name: "{{ asm_policy_name }}"
         file: "{{ template_path }}"
         active: yes
         state: "{{ state }}"

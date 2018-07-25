@@ -3,17 +3,35 @@
   gather_facts: False
 
   vars_prompt:
-    - name: username
+    - name: git_username
       prompt: "Username"
       default: "migara"
       private: no
-    - name: password
+    - name: git_password
       prompt: "Password"
-      default: "b796313697d78c5d5c2cfbb42e4e3b8f10e8d7fd"  
+      default: "{{ git_token }}"  
+      private: yes
+    - name: git_owner
+      prompt: "Git Owner"
+      default: "migara"
+      private: no
+    - name: git_repo
+      prompt: "Repo Name"
+      default: "ASM"  
+      private: no
+    - name: git_branch
+      prompt: "Git Branch"
+      default: "dev"
+      private: no
+    - name: commit_msg
+      prompt: "Commit message"
+      default: "commit"
+      private: no
     - name: file_name
       prompt: "File"
       default: "template-1.xml"  
       private: no
 
+  tasks:
   - import_tasks: ../files/git.yml
     

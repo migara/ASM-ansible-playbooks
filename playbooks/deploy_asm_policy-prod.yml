@@ -1,0 +1,23 @@
+- name: ASM deploy playbook
+  hosts: f5_prod
+  gather_facts: False
+  connection: local
+
+  vars_prompt:
+    - name: asm_policy_name
+      prompt: "Name of the ASM policy to be deployed in Production"
+      private: no
+
+  vars:
+    state: "present"
+    template_path: "../templates/{{ template_name }}.xml"
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Create ASM policy
+      bigip_asm_policy:
+        name: "{{ asm_policy_name }}"
+        file: "{{ template_path }}"
+        active: yes
+        state: "{{ state }}"
