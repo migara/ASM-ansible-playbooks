@@ -5,7 +5,7 @@
 
 Pre-req: LTM app definition exist on git (LTM repo). To be used on step 5.1
 
-1. SecOps run playbooks/deploy_asm_policy.yml  
+1. SecOps run [playbooks/deploy_asm_policy.yml](playbooks/deploy_asm_policy.yml)
     1.1 Prompted for policy_name and template_name  
     1.2 A new policy (policy_name) deployed on pre-prod BIG-IP using template (template_name)  
 
@@ -54,3 +54,9 @@ Pre-req: LTM app definition exist on git (IaC). To be used on step 3.3
 5. SecOps run playbooks/deploy_asm_app.yml
   5.1 Update the ASM policy on prod BIG-IP
 -->
+
+## How to play
+
+```
+ansible-playbook playbooks/playbook_name.yml -l bigips -e @creds.yml --vault-password-file .password -vvv
+```

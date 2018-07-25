@@ -4,7 +4,7 @@ experimental/
 iac/
 img/
 playbooks/commands
-playbook_defaults
+playbooks_default/
 scripts/
 test/
 .drone.yml
