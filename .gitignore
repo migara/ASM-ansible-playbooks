@@ -5,11 +5,12 @@ iac/
 img/
 playbooks/commands
 playbook_defaults
-script/
+scripts/
 test/
 .drone.yml
 .editorconfig
 .travis.yml
+.DS_Store
 Dockerfile
 encode
 LICENSE
