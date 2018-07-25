@@ -1,0 +1,21 @@
+- name: ASM integrity check
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+    prod_policy_file: ../tmp/
+    policy_on_git: ../tmp/
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Export ASM policy
+      bigip_command:
+        commands: "save asm policy {{ asm_policy_name }} xml-file /var/tmp/export-{{ asm_policy_name }}.xml"
+      delegate_to: localhost
+
+    - name: Fetch ASM policy
+      fetch:
+        src: /var/tmp/{{ asm_policy_name }}.xml
+        dest: ../templates/
+        flat: yes

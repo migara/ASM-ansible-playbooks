@@ -1,0 +1,48 @@
+- name: Get File
+  uri:
+    url: "https://api.github.com/repos/migara/ASM-ansible-playbooks/contents/{{ file_name }}"
+    method: GET
+    user: "{{ username }}"
+    password: "{{ password }}"
+    force_basic_auth: yes
+    body_format: json
+    status_code: 200, 404
+  register: result
+
+- debug:
+    msg: "{{ result }}"
+
+- name: Create File 
+  uri:
+    url: "https://api.github.com/repos/migara/ASM-ansible-playbooks/contents/{{ file_name }}"
+    method: PUT
+    user: "{{ username }}"
+    password: "{{ password }}"
+    body: 
+      message: "Upload ASM policy"
+      committer:
+        name: "{{ username }}"
+        email: "test@migara.com"
+      content: "{{ lookup('file', '../templates/new_asm_policy.xml') | b64encode }}"
+    force_basic_auth: yes
+    body_format: json
+    status_code: 201
+  when: result.status == 404
+
+- name: Update File 
+  uri:
+    url: "https://api.github.com/repos/migara/ASM-ansible-playbooks/contents/{{ file_name }}"
+    method: PUT
+    user: "{{ username }}"
+    password: "{{ password }}"
+    body: 
+      sha: "{{ result.json.sha }}"
+      message: "Update ASM policy"
+      committer:
+        name: "{{ username }}"
+        email: "test@migara.com"
+      content: "{{ lookup('file', '../templates/new_asm_policy.xml') | b64encode }}"
+    force_basic_auth: yes
+    body_format: json
+    status_code: 200
+  when: result.status == 200

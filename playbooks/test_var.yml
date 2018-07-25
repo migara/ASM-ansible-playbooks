@@ -1,0 +1,26 @@
+- name: Variable Import
+  hosts: bigips
+  gather_facts: False
+
+  vars:
+    state: "present"
+    policy_name1: asm-l7-policy
+    asm_policy_template: "/var/tmp/ansible/templates/asm-template-1.xml"
+    asm_policy_name: new_asm_policy
+
+  vars_prompt:
+    - name: app_name
+      prompt: "Enter the app name"
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Import json
+      include_vars:
+        file: ../app_definitions/{{ app_name }}.json
+        name: app_definition
+
+    - name: Print mosh version
+      debug: 
+        msg: "{{ app_definition }}"
+

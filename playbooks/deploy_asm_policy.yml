@@ -1,0 +1,27 @@
+- name: ASM deploy playbook
+  hosts: bigips
+  gather_facts: False
+  connection: local
+
+  vars_prompt:
+    - name: app_name
+      prompt: "App Name"
+      private: no
+    - name: template_name
+      prompt: "WAF Template Name"
+      private: no
+      default: "template-1"
+
+  vars:
+    state: "present"
+    template_path: "../templates/{{ template_name }}.xml"
+
+  environment: "{{ bigip_env }}"
+
+  tasks:
+    - name: Create ASM policy
+      bigip_asm_policy:
+        name: "{{ app_name }}"
+        file: "{{ template_path }}"
+        active: yes
+        state: "{{ state }}"

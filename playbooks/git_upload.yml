@@ -1,0 +1,19 @@
+- name: Git upload
+  hosts: localhost
+  gather_facts: False
+
+  vars_prompt:
+    - name: username
+      prompt: "Username"
+      default: "migara"
+      private: no
+    - name: password
+      prompt: "Password"
+      default: "b796313697d78c5d5c2cfbb42e4e3b8f10e8d7fd"  
+    - name: file_name
+      prompt: "File"
+      default: "template-1.xml"  
+      private: no
+
+  - import_tasks: ../files/git.yml
+    

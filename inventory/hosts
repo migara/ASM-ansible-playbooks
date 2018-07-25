@@ -1,3 +1,5 @@
+client ansible_host=172.17.0.2
+
 [bigips]
 asm13.local
 

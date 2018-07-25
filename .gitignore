@@ -1,0 +1,16 @@
+asm-module/
+content/
+experimental/
+iac/
+img/
+playbooks/commands
+playbook_defaults
+script/
+test/
+.drone.yml
+.editorconfig
+.travis.yml
+Dockerfile
+encode
+LICENSE
+runsible.py
