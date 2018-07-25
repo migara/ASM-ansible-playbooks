@@ -6,7 +6,7 @@
 Pre-req: LTM app definition exist on git (LTM repo). To be used on step 5.1
 
 1. SecOps run playbooks/deploy_asm_policy.yml  
-  1.1. Prompted for policy_name and template_name  
+  1. Prompted for policy_name and template_name  
   1.2 A new policy (policy_name) deployed on pre-prod BIG-IP using template (template_name)  
 
 2. SecOps log in to the pre-prod BIG-IP and fine tune the policy  
